@@ -25,7 +25,7 @@ exports.handler = async (event) => {
 Если на фото нет еды — верни {"dish":"Еда не распознана","calories":0,"protein":0,"fat":0,"carbs":0}`;
 
     // Вызов Gemini API (модель gemini-2.0-flash — быстрая и бесплатная в free tier)
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
     const geminiRes = await fetch(geminiUrl, {
       method: 'POST',
