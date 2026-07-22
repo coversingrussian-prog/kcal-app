@@ -1,4 +1,4 @@
-// Netlify Function: анализ фото еды через Google Gemini (бесплатный tier)
+/ Netlify Function: анализ фото еды через Google Gemini (бесплатный tier)
 // Ключ хранится в переменной окружения GEMINI_API_KEY — НЕ в коде фронтенда.
 
 exports.handler = async (event) => {
