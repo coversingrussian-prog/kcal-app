@@ -18,35 +18,29 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'No input' }) };
     }
 
-    // Short prompt = faster response
+    // Instruction: force strict JSON only, no markdown, no extra text.
+    const instruction =
+      'You are a nutrition estimator. Reply with ONLY a raw JSON object, ' +
+      'no markdown, no code fences, no extra words. ' +
+      'Format: {"dish": string, "calories": number, "protein": number, "fat": number, "carbs": number}. ' +
+      'All macro values in grams, calories in kcal. Dish name in ' + langName + '.';
+
     const parts = [];
     if (image) {
-      parts.push({ text: 'Dish on photo. Estimate for visible portion. Dish name in ' + langName + '.' });
+      parts.push({ text: instruction + ' Estimate for the dish visible on the photo (visible portion).' });
       parts.push({ inline_data: { mime_type: 'image/jpeg', data: image } });
     } else {
-      parts.push({ text: 'Estimate for: ' + foodText + '. Use given grams or one typical serving. Dish name in ' + langName + '.' });
+      parts.push({ text: instruction + ' Estimate for: ' + foodText + '. Use given grams or one typical serving.' });
     }
 
     const MODEL = 'gemini-3.6-flash';
-    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent?key=' + API_KEY;
+    const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent';
 
     const reqBody = JSON.stringify({
       contents: [{ parts: parts }],
       generationConfig: {
-        temperature: 0.1,
-        maxOutputTokens: 300,
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: 'OBJECT',
-          properties: {
-            dish: { type: 'STRING' },
-            calories: { type: 'NUMBER' },
-            protein: { type: 'NUMBER' },
-            fat: { type: 'NUMBER' },
-            carbs: { type: 'NUMBER' }
-          },
-          required: ['dish', 'calories', 'protein', 'fat', 'carbs']
-        }
+        maxOutputTokens: 600,
+        responseMimeType: 'application/json'
       }
     });
 
@@ -55,7 +49,10 @@ exports.handler = async (event) => {
     for (let attempt = 0; attempt < 3; attempt++) {
       geminiRes = await fetch(geminiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': API_KEY
+        },
         body: reqBody
       });
       rawResponse = await geminiRes.text();
@@ -81,14 +78,19 @@ exports.handler = async (event) => {
 
     let text = '';
     if (geminiData && geminiData.candidates && geminiData.candidates[0] &&
-        geminiData.candidates[0].content && geminiData.candidates[0].content.parts &&
-        geminiData.candidates[0].content.parts[0]) {
-      text = geminiData.candidates[0].content.parts[0].text || '';
+        geminiData.candidates[0].content && geminiData.candidates[0].content.parts) {
+      // Concatenate all text parts (3.x may split output)
+      geminiData.candidates[0].content.parts.forEach(function(p) {
+        if (p && p.text) text += p.text;
+      });
     }
 
     if (!text) {
       return { statusCode: 502, body: JSON.stringify({ error: 'Empty reply', detail: JSON.stringify(geminiData).slice(0, 300) }) };
     }
+
+    // Strip markdown fences if present, then parse
+    text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
     let parsed = null;
     try {
