@@ -27,7 +27,7 @@ exports.handler = async (event) => {
       parts.push({ text: 'Estimate for: ' + foodText + '. Use given grams or one typical serving. Dish name in ' + langName + '.' });
     }
 
-    const MODEL = 'gemini-2.5-flash';
+    const MODEL = 'gemini-3.6-flash';
     const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent?key=' + API_KEY;
 
     const reqBody = JSON.stringify({
