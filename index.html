@@ -523,6 +523,20 @@
   .portion-custom { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
   .portion-custom input { flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px; color: var(--text); font-size: 15px; }
   .portion-custom span { font-size: 14px; color: var(--text-dim); }
+
+  /* ==== Add product form ==== */
+  #addProductBox { margin-top: 14px; }
+  .add-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .add-hint { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 16px; }
+  .add-field { margin-bottom: 12px; }
+  .add-field label { font-size: 12px; color: var(--text-dim); display: block; margin-bottom: 6px; }
+  .add-field input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--text); font-size: 15px; }
+  .add-field input:focus { outline: none; border-color: var(--lime-dim); }
+  .add-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .add-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .add-actions button { padding: 14px; border-radius: 13px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; }
+  .add-cancel-btn { background: transparent; border: 1px solid var(--line) !important; color: var(--text); }
+  .add-save-btn { background: var(--lime); color: #12130F; }
 </style>
 </head>
 <body>
@@ -645,6 +659,22 @@
           </div>
         </div>
         <button class="scan-cancel" id="scanCancelBtn" data-i18n="scan_cancel">Закрыть сканер</button>
+      </div>
+
+      <div id="addProductBox" style="display:none;">
+        <div class="add-title" id="addTitle">Добавить продукт</div>
+        <p class="add-hint" id="addHint"></p>
+        <div class="add-field"><label id="addNameLbl">Название</label><input type="text" id="addName" placeholder=""></div>
+        <div class="add-field"><label id="addCalLbl">Калории</label><input type="number" id="addCal" inputmode="numeric"></div>
+        <div class="add-grid">
+          <div class="add-field"><label id="addProtLbl">Белки</label><input type="number" id="addProt" inputmode="numeric"></div>
+          <div class="add-field"><label id="addFatLbl">Жиры</label><input type="number" id="addFat" inputmode="numeric"></div>
+          <div class="add-field"><label id="addCarbLbl">Углеводы</label><input type="number" id="addCarb" inputmode="numeric"></div>
+        </div>
+        <div class="add-actions">
+          <button class="add-cancel-btn" id="addCancelBtn">Отмена</button>
+          <button class="add-save-btn" id="addSaveBtn">Сохранить</button>
+        </div>
       </div>
     </div>
 
@@ -1034,7 +1064,20 @@
       portion_title: 'Сколько съел?',
       portion_custom: 'Своё количество',
       grams: 'г',
-      scan_prem_hint: 'Сканер штрих-кода доступен в Premium'
+      scan_prem_hint: 'Сканер штрих-кода доступен в Premium',
+      add_title: 'Добавить продукт',
+      add_hint: 'Этого продукта ещё нет в базе. Введи данные с упаковки (на 100 г) — и он появится для всех.',
+      add_name: 'Название продукта',
+      add_name_ph: 'Например: Кефир Nemiroff 2.5%',
+      add_cal: 'Калории (ккал / 100 г)',
+      add_prot: 'Белки (г / 100 г)',
+      add_fat: 'Жиры (г / 100 г)',
+      add_carb: 'Углеводы (г / 100 г)',
+      add_save: 'Сохранить и посчитать',
+      add_cancel: 'Отмена',
+      add_saved: 'Спасибо! Продукт добавлен в базу',
+      add_fill: 'Введи название и калории',
+      db_searching: 'Проверяем базу продуктов…'
     },
     uz: {
       subtitle: 'Taomni suratga ol yoki tasvirlab ber — kaloriyani bil',
@@ -1155,7 +1198,20 @@
       portion_title: 'Qancha yedingiz?',
       portion_custom: 'O\'z miqdoringiz',
       grams: 'g',
-      scan_prem_hint: 'Shtrix-kod skaneri Premiumda mavjud'
+      scan_prem_hint: 'Shtrix-kod skaneri Premiumda mavjud',
+      add_title: 'Mahsulot qo\'shish',
+      add_hint: 'Bu mahsulot bazada yo\'q. Qadoqdagi ma\'lumotni kiriting (100 g uchun) — u hammaga ko\'rinadi.',
+      add_name: 'Mahsulot nomi',
+      add_name_ph: 'Masalan: Kefir Nemiroff 2.5%',
+      add_cal: 'Kaloriya (kkal / 100 g)',
+      add_prot: 'Oqsil (g / 100 g)',
+      add_fat: 'Yog\' (g / 100 g)',
+      add_carb: 'Uglevod (g / 100 g)',
+      add_save: 'Saqlash va hisoblash',
+      add_cancel: 'Bekor qilish',
+      add_saved: 'Rahmat! Mahsulot bazaga qo\'shildi',
+      add_fill: 'Nomi va kaloriyani kiriting',
+      db_searching: 'Mahsulotlar bazasi tekshirilmoqda…'
     },
     en: {
       subtitle: 'Snap or describe your food — get the calories',
@@ -1276,7 +1332,20 @@
       portion_title: 'How much did you eat?',
       portion_custom: 'Custom amount',
       grams: 'g',
-      scan_prem_hint: 'Barcode scanner is available in Premium'
+      scan_prem_hint: 'Barcode scanner is available in Premium',
+      add_title: 'Add product',
+      add_hint: 'This product is not in the database yet. Enter the data from the label (per 100 g) — it will appear for everyone.',
+      add_name: 'Product name',
+      add_name_ph: 'e.g. Kefir Nemiroff 2.5%',
+      add_cal: 'Calories (kcal / 100 g)',
+      add_prot: 'Protein (g / 100 g)',
+      add_fat: 'Fat (g / 100 g)',
+      add_carb: 'Carbs (g / 100 g)',
+      add_save: 'Save and calculate',
+      add_cancel: 'Cancel',
+      add_saved: 'Thanks! Product added to the database',
+      add_fill: 'Enter name and calories',
+      db_searching: 'Checking product database…'
     }
   };
 
@@ -2357,9 +2426,14 @@
     });
   }
 
+  var currentBarcode = null;   // код, который сейчас ищем / добавляем
+  var PRODUCT_API = '/.netlify/functions/product';
+
   function lookupBarcode(code) {
     if (!code) return;
+    currentBarcode = code;
     document.getElementById('scanStatus').textContent = t('scan_searching');
+    // Шаг 1: Open Food Facts
     fetch('https://world.openfoodfacts.org/api/v2/product/' + encodeURIComponent(code) + '.json?fields=product_name,nutriments')
       .then(function(r) { return r.json(); })
       .then(function(data) {
@@ -2367,32 +2441,129 @@
           var n = data.product.nutriments;
           var kcal = n['energy-kcal_100g'];
           if (kcal === undefined && n['energy_100g'] !== undefined) kcal = Math.round(n['energy_100g'] / 4.184);
-          if (kcal === undefined) { showBarcodeNotFound(); return; }
+          if (kcal !== undefined) {
+            barcodeProduct = {
+              dish: data.product.product_name || 'Продукт',
+              per100: {
+                calories: Math.round(kcal) || 0,
+                protein: Math.round(n['proteins_100g'] || 0),
+                fat: Math.round(n['fat_100g'] || 0),
+                carbs: Math.round(n['carbohydrates_100g'] || 0)
+              }
+            };
+            closeScannerBox();
+            showPortionPicker();
+            return;
+          }
+        }
+        // Шаг 2: не нашли в OFF -> ищем в своей базе
+        lookupInMyDb(code);
+      })
+      .catch(function() { lookupInMyDb(code); });
+  }
+
+  function lookupInMyDb(code) {
+    document.getElementById('scanStatus').textContent = t('db_searching');
+    fetch(PRODUCT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get', code: code })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res && res.found && res.product) {
+          var p = res.product;
           barcodeProduct = {
-            dish: data.product.product_name || 'Продукт',
+            dish: p.dish || 'Продукт',
             per100: {
-              calories: Math.round(kcal) || 0,
-              protein: Math.round(n['proteins_100g'] || 0),
-              fat: Math.round(n['fat_100g'] || 0),
-              carbs: Math.round(n['carbohydrates_100g'] || 0)
+              calories: Math.round(p.calories) || 0,
+              protein: Math.round(p.protein) || 0,
+              fat: Math.round(p.fat) || 0,
+              carbs: Math.round(p.carbs) || 0
             }
           };
           closeScannerBox();
           showPortionPicker();
         } else {
-          showBarcodeNotFound();
+          showAddProductForm(code);
         }
       })
-      .catch(function() { showBarcodeNotFound(); });
+      .catch(function() { showAddProductForm(code); });
   }
 
-  function showBarcodeNotFound() {
-    document.getElementById('scanStatus').textContent = t('scan_not_found');
-    // Switch user to text tab as graceful fallback
-    setTimeout(function() {
-      closeScannerBox();
-      document.getElementById('tabText').click();
-    }, 2200);
+  // Показываем форму добавления вместо переброса на текст
+  function showAddProductForm(code) {
+    currentBarcode = code;
+    // Заполняем тексты
+    document.getElementById('addTitle').textContent = t('add_title');
+    document.getElementById('addHint').textContent = t('add_hint');
+    document.getElementById('addNameLbl').textContent = t('add_name');
+    document.getElementById('addName').placeholder = t('add_name_ph');
+    document.getElementById('addCalLbl').textContent = t('add_cal');
+    document.getElementById('addProtLbl').textContent = t('add_prot');
+    document.getElementById('addFatLbl').textContent = t('add_fat');
+    document.getElementById('addCarbLbl').textContent = t('add_carb');
+    document.getElementById('addCancelBtn').textContent = t('add_cancel');
+    document.getElementById('addSaveBtn').textContent = t('add_save');
+    // Очистка полей
+    document.getElementById('addName').value = '';
+    document.getElementById('addCal').value = '';
+    document.getElementById('addProt').value = '';
+    document.getElementById('addFat').value = '';
+    document.getElementById('addCarb').value = '';
+    // Прячем камеру/ручной ввод, показываем форму
+    stopScanner();
+    document.getElementById('reader').style.display = 'none';
+    document.getElementById('scanStatus').style.display = 'none';
+    var mm = document.querySelector('#scannerBox .scan-manual'); if (mm) mm.style.display = 'none';
+    document.getElementById('scanCancelBtn').style.display = 'none';
+    document.getElementById('addProductBox').style.display = 'block';
+    document.getElementById('scannerBox').classList.add('show');
+  }
+
+  function resetScannerBox() {
+    document.getElementById('reader').style.display = 'block';
+    document.getElementById('scanStatus').style.display = 'block';
+    var mm = document.querySelector('#scannerBox .scan-manual'); if (mm) mm.style.display = 'block';
+    document.getElementById('scanCancelBtn').style.display = 'block';
+    document.getElementById('addProductBox').style.display = 'none';
+  }
+
+  function saveNewProduct() {
+    var name = document.getElementById('addName').value.trim();
+    var cal = parseInt(document.getElementById('addCal').value, 10) || 0;
+    if (!name || cal <= 0) { alert(t('add_fill')); return; }
+    var prod = {
+      dish: name,
+      calories: cal,
+      protein: parseInt(document.getElementById('addProt').value, 10) || 0,
+      fat: parseInt(document.getElementById('addFat').value, 10) || 0,
+      carbs: parseInt(document.getElementById('addCarb').value, 10) || 0
+    };
+    var saveBtn = document.getElementById('addSaveBtn');
+    saveBtn.disabled = true;
+    fetch(PRODUCT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'save', code: currentBarcode, product: prod })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function() {
+        saveBtn.disabled = false;
+        showToast(t('add_saved'));
+        barcodeProduct = { dish: prod.dish, per100: prod };
+        resetScannerBox();
+        closeScannerBox();
+        showPortionPicker();
+      })
+      .catch(function() {
+        saveBtn.disabled = false;
+        // Даже если запись не удалась — покажем результат пользователю
+        barcodeProduct = { dish: prod.dish, per100: prod };
+        resetScannerBox();
+        closeScannerBox();
+        showPortionPicker();
+      });
   }
 
   // Portion picker reuses the result screen
@@ -2474,12 +2645,14 @@
   }
 
   // Wire buttons
-  document.getElementById('barcodeBtn').addEventListener('click', openScanner);
-  document.getElementById('scanCancelBtn').addEventListener('click', closeScannerBox);
+  document.getElementById('barcodeBtn').addEventListener('click', function() { resetScannerBox(); openScanner(); });
+  document.getElementById('scanCancelBtn').addEventListener('click', function() { resetScannerBox(); closeScannerBox(); });
   document.getElementById('manualBarcodeBtn').addEventListener('click', function() {
     var code = document.getElementById('manualBarcode').value.trim();
     if (code.length >= 6) { stopScanner(); lookupBarcode(code); }
   });
+  document.getElementById('addSaveBtn').addEventListener('click', saveNewProduct);
+  document.getElementById('addCancelBtn').addEventListener('click', function() { resetScannerBox(); closeScannerBox(); });
   // Hide premium lock badge for premium users
   (function() {
     var lock = document.getElementById('barcodeLock');
